@@ -61,3 +61,28 @@ INFO: Build completed successfully, 11 total actions
 Executed 2 out of 2 tests: 2 tests pass.
 There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
 ```
+
+What is interesting is that the test binary does get built correctly and can be executed manually without problems:
+```
+$ bazel build //:dynamic
+INFO: Invocation ID: fc5af775-9c56-4cc0-9ba2-ce2a5eea3ce8
+INFO: Build options --extra_toolchains and --platforms have changed, discarding analysis cache.
+INFO: Analyzed target //:dynamic (0 packages loaded, 254 targets configured).
+INFO: Found 1 target...
+Target //:dynamic up-to-date:
+  bazel-bin/dynamic
+INFO: Elapsed time: 0.640s, Critical Path: 0.47s
+INFO: 8 processes: 4 internal, 4 linux-sandbox.
+INFO: Build completed successfully, 8 total actions
+$ bazel-bin/dynamic
+The number is: 42
+$ ldd bazel-bin/dynamic
+	linux-vdso.so.1 (0x00007ffe41e6f000)
+	liblib_Sliblib.so => /home/fabian/dev/dynamic_test_repro/bazel-bin/_solib_k8/liblib_Sliblib.so (0x00007f2ec49cc000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f2ec47cb000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f2ec467c000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2ec448a000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f2ec49d5000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f2ec446f000)
+
+```
